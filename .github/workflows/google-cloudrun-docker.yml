@@ -145,6 +145,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodule: "true"
 
       # not working
       # - name: Checkout submodules
