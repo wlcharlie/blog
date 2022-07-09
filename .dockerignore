@@ -1,0 +1,10 @@
+Dockerfile
+README.md
+node_modules
+npm-debug.log
+./client/README.md
+./client/node_modules
+./client/npm-debug.log
+.git
+node_modules
+build
