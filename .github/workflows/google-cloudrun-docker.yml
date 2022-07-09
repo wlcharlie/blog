@@ -130,7 +130,7 @@ name: Build and Deploy to Cloud Run
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
