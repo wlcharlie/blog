@@ -2,7 +2,7 @@ import { getAllNoteIds, getNoteData } from "lib/notes"
 
 export async function getStaticPaths() {
   const paths = getAllNoteIds()
-  console.log(paths)
+
   return {
     paths,
     fallback: false,
