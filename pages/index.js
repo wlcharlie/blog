@@ -8,7 +8,7 @@ import { getSortedNotesData } from "lib/notes"
 export async function getStaticProps() {
   const allNotesData = getSortedNotesData()
   const allPostsData = getSortedPostsData()
-  console.log(allNotesData)
+  console.log(allNotesData[6])
   return {
     props: {
       allPostsData,
