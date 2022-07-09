@@ -145,14 +145,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: true
 
-      # not working
-      # - name: Checkout submodules
-      #   uses: wlcharlie/Notes@main
-      #   with:
-      #     remote: true
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
 
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
