@@ -1,17 +1,56 @@
-# build environment
-FROM node:14-alpine as react-build
-WORKDIR /app
-COPY . ./
-RUN yarn
-RUN yarn build
+# # install
+# FROM node:14-alpine as deps
+# RUN apk add --no-cache libc6-compat
+# WORKDIR /app
+# COPY package.json package-lock.json ./ 
+# RUN npm ci
 
-# https://github.com/GoogleCloudPlatform/community/tree/master/tutorials/deploy-react-nginx-cloud-run
-# server environment
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/configfile.template
-ENV PORT 8080
-ENV HOST 0.0.0.0
-RUN sh -c "envsubst '\$PORT'  < /etc/nginx/conf.d/configfile.template > /etc/nginx/conf.d/default.conf"
-COPY --from=react-build /app/build /usr/share/nginx/html
-EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+# # build
+# FROM node:14-alpine as builder
+# WORKDIR /app
+# COPY --from=deps /app/node_modules ./node_modules
+# COPY . .
+# RUN npm run build
+
+# # run to start app
+# FROM node:14-alpine as runner
+# WORKDIR /app
+# ENV NODE_ENV production
+# RUN addgroup --system --gid 1001 nodejs
+# RUN adduser --system --uid 1001 nextjs
+# COPY --from=builder /app/next.config.js ./
+# COPY --from=builder /app/public ./public
+# COPY --from=builder /app/package.json ./package.json
+# COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# USER nextjs
+
+# EXPOSE 3000
+
+# ENV PORT 3000
+
+# CMD ["node", "server.js"]
+
+# base image
+FROM node:16-alpine
+
+# Create and change to the app directory.
+WORKDIR /usr/app
+
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
+# Copying this first prevents re-running npm install on every code change.
+COPY . .
+
+# Install production dependencies.
+# If you add a package-lock.json, speed your build by switching to 'npm ci'.
+RUN npm ci --only=production
+
+# Copy local code to the container image.
+
+RUN npm run build
+
+EXPOSE 3000
+# Run the web service on container startup.
+CMD [ "npm", "start" ]
