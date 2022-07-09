@@ -2,6 +2,7 @@ import { getAllNoteIds, getNoteData } from "lib/notes"
 
 export async function getStaticPaths() {
   const paths = getAllNoteIds()
+  console.log(paths)
   return {
     paths,
     fallback: false,
@@ -10,7 +11,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const noteData = await getNoteData(params.id)
-  console.log(noteData)
   return {
     props: {
       noteData,
